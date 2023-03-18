@@ -246,8 +246,8 @@ class MyCallback(TrainerCallback):
         for x in batch(preds, 4):
             if len(x) != 4:
                 continue
-            print()
-            print(x)
+            # print()
+            # print(x)
             grouped_preds.append(
                 [
                     x[0][0],
