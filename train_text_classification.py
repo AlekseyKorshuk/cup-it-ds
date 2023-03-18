@@ -51,9 +51,9 @@ training_args = TrainingArguments(
     weight_decay=0.01,
     evaluation_strategy="steps",
     eval_steps=100,
-    save_strategy="steps",
-    save_steps=100,
-    load_best_model_at_end=True,
+    save_strategy="epoch",
+    save_steps=1,
+    # load_best_model_at_end=True,
     push_to_hub=True,
 )
 
