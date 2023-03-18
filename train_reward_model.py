@@ -246,8 +246,6 @@ class MyCallback(TrainerCallback):
         for x in batch(preds, 4):
             if len(x) != 4:
                 continue
-            # print()
-            # print(x)
             grouped_preds.append(
                 [
                     x[0][0],
@@ -291,16 +289,6 @@ class MyCallback(TrainerCallback):
             )
             pair_custom_ndcg[f"paired/custom_ndcg/k={k}"] = sk_ndcg_
 
-
-        # sk_ndcg = {}
-        # for k in range(1, 5 + 1):
-        #     sk_ndcg_ = sk_ndcg_score(
-        #         y_true=[[0, 1, 2, 3, 4]] * len(grouped_preds),
-        #         y_score=scipy.special.softmax(grouped_preds, axis=1),
-        #         k=k
-        #     )
-        #     sk_ndcg[f"sk_ndcg/k={k}"] = sk_ndcg_
-
         # Subtracting rejected scores from chosen scores
         diff = preds[:, 0] - preds[:, 1]
         acc = (diff >= 0).type(torch.float32).mean().item()
@@ -339,7 +327,7 @@ if __name__ == "__main__":
         evaluation_strategy="steps",
         per_device_train_batch_size=8,
         per_device_eval_batch_size=8,
-        eval_steps=10,
+        eval_steps=2480,
         save_steps=1,
         warmup_steps=100,
         logging_dir="./logs",
@@ -365,7 +353,7 @@ if __name__ == "__main__":
         layer.requires_grad_(False)
 
     # Create the comparisons datasets
-    data_path = "AlekseyKorshuk/cup-it-ds-pairwise-small"
+    data_path = "AlekseyKorshuk/cup-it-ds-pairwise"
     # data_path = "Dahoas/rm-static"
     # data_path = "CarperAI/openai_summarize_comparisons"
 
