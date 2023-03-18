@@ -229,15 +229,15 @@ class MyCallback(TrainerCallback):
             samples["rejected"].append(ele["rejected"])
             samples["scores"].append(preds[i].tolist())
 
-        preds = [[-12, 23], [-12, 23]]
-        prompt_dict = {}
-        for row, pred in
-
-
-        0 > 1 > 2 > 3 > 4
-        a b c d e
-        model(0) -> a
-        model(1) -> b
+        # preds = [[-12, 23], [-12, 23]]
+        # prompt_dict = {}
+        # for row, pred in
+        #
+        #
+        # 0 > 1 > 2 > 3 > 4
+        # a b c d e
+        # model(0) -> a
+        # model(1) -> b
 
         # Subtracting rejected scores from chosen scores
         ground_truth = [0] * len(preds[:, 0])
