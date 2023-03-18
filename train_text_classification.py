@@ -1,7 +1,7 @@
 import scipy
 from datasets import load_dataset
 
-imdb = load_dataset("AlekseyKorshuk/cup-it-ds-classification")
+imdb = load_dataset("ummagumm-a/cup-it-ds-classification")
 
 from transformers import AutoTokenizer
 
@@ -120,7 +120,7 @@ label2id = {"0": 0, "1": 1}
 from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
 
 model = AutoModelForSequenceClassification.from_pretrained(
-    "ummagumm-a/cup-it-ds-classification", num_labels=len(id2label.keys()), id2label=id2label, label2id=label2id
+    "distilbert-base-uncased", num_labels=len(id2label.keys()), id2label=id2label, label2id=label2id
 )
 
 training_args = TrainingArguments(
