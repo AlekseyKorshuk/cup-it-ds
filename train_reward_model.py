@@ -360,8 +360,8 @@ def hf_get_causal_hidden_layers(model: nn.Module):
 
 if __name__ == "__main__":
     # MODEL_PATH = "Dahoas/gptneo-sft-static"
-    MODEL_PATH = "EleutherAI/pythia-1.4b-deduped"
-    TOKENIZER_PATH = "EleutherAI/pythia-1.4b-deduped"
+    MODEL_PATH = "EleutherAI/gpt-neo-1.3B"
+    TOKENIZER_PATH = "EleutherAI/gpt-neo-1.3B"
     # MODEL_PATH = "AlekseyKorshuk/gpt-neo-125M-sft"
 
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH, truncation_side="left")
