@@ -220,6 +220,7 @@ class MyCallback(TrainerCallback):
         # print(state, metrics)
         preds = torch.tensor(trainer.predict(val_dataset)[0])
         preds = preds.view(-1, 2)
+
         samples = {"prompt": [], "chosen": [], "rejected": [], "scores": []}
         for i in range(16):
             ele = dataset[validation_split_name][i]
@@ -227,6 +228,17 @@ class MyCallback(TrainerCallback):
             samples["chosen"].append(ele["chosen"])
             samples["rejected"].append(ele["rejected"])
             samples["scores"].append(preds[i].tolist())
+
+        preds = [[-12, 23], [-12, 23]]
+        prompt_dict = {}
+        for row, pred in
+
+
+        0 > 1 > 2 > 3 > 4
+        a b c d e
+        model(0) -> a
+        model(1) -> b
+
         # Subtracting rejected scores from chosen scores
         ground_truth = [0] * len(preds[:, 0])
         ndcg = ndcg_score(ground_truth, scipy.special.softmax(preds, axis=1), k=2)
@@ -316,7 +328,7 @@ if __name__ == "__main__":
             split=f"train[{validation_split_percentage}%:]",
         )
 
-    dataset = dataset.shuffle(seed=42)
+    dataset["train"] = dataset["train"].shuffle(seed=42)
     train_pairs = create_comparison_dataset(dataset["train"])
     val_pairs = create_comparison_dataset(dataset[validation_split_name])
 
