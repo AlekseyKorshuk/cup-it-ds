@@ -262,7 +262,7 @@ class MyCallback(TrainerCallback):
         custom_ndcg = {}
         for k in range(1, 5 + 1):
             ndcg_ = ndcg_score(ground_truth, scipy.special.softmax(grouped_preds, axis=1), k=k)
-            custom_ndcg[f"custom_ndcg/k={k}"] = ndcg_
+            custom_ndcg[f"grouped/custom_ndcg/k={k}"] = ndcg_
 
         sk_ndcg = {}
         for k in range(1, 5 + 1):
@@ -271,11 +271,26 @@ class MyCallback(TrainerCallback):
                 y_score=scipy.special.softmax(grouped_preds, axis=1),
                 k=k
             )
-            sk_ndcg[f"sk_ndcg/k={k}"] = sk_ndcg_
+            sk_ndcg[f"grouped/sk_ndcg/k={k}"] = sk_ndcg_
 
+        pair_sk_ndcg = {}
+        for k in range(1, 5 + 1):
+            sk_ndcg_ = sk_ndcg_score(
+                y_true=[[0, 1]] * len(preds),
+                y_score=scipy.special.softmax(preds, axis=1),
+                k=k
+            )
+            pair_sk_ndcg[f"paired/sk_ndcg/k={k}"] = sk_ndcg_
 
-        ground_truth = [0] * len(preds[:, 0])
-        ndcg_pair = ndcg_score(ground_truth, scipy.special.softmax(preds, axis=1), k=2)
+        pair_custom_ndcg = {}
+        for k in range(1, 5 + 1):
+            sk_ndcg_ = ndcg_score(
+                [0] * len(preds),
+                scipy.special.softmax(preds, axis=1),
+                k=k
+            )
+            pair_custom_ndcg[f"paired/custom_ndcg/k={k}"] = sk_ndcg_
+
 
         # sk_ndcg = {}
         # for k in range(1, 5 + 1):
@@ -293,9 +308,11 @@ class MyCallback(TrainerCallback):
             print("Testing accuracy: ", acc)
             if torch.distributed.get_rank() == 0:
                 wandb.log({"samples": wandb.Table(data=pd.DataFrame(samples))})
-                results = {"acc": acc, "ndcg_pair": ndcg_pair}
+                results = {"acc": acc}
                 results.update(sk_ndcg)
                 results.update(custom_ndcg)
+                results.update(pair_sk_ndcg)
+                results.update(pair_custom_ndcg)
                 wandb.log(results)
 
 
