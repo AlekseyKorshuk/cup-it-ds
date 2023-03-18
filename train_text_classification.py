@@ -1,7 +1,7 @@
 import scipy
 from datasets import load_dataset
 
-model_path = "microsoft/deberta-xlarge-mnli"
+model_path = "microsoft/deberta-v3-large"
 imdb = load_dataset("ummagumm-a/cup-it-ds-classification")
 
 from transformers import AutoTokenizer
@@ -137,6 +137,7 @@ training_args = TrainingArguments(
     save_steps=1,
     # load_best_model_at_end=True,
     push_to_hub=True,
+    deepspeed="ds_config_gpt_j.json"
 )
 
 trainer = Trainer(
