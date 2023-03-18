@@ -1,9 +1,12 @@
+import functools
 import os
 
 import pandas as pd
 import scipy
 import torch
 from datasets import load_dataset
+from torch import nn
+
 from reward_model import GPTRewardModel
 from torch.utils.data import Dataset
 from tqdm import tqdm
@@ -304,6 +307,57 @@ class MyCallback(TrainerCallback):
                 wandb.log(results)
 
 
+def rgetattr(obj, attr: str, *args):
+    """A chain-able attribute version of getattr. For example, to get the
+    attribute `foo.bar.baz` from `obj`, you can use:
+        `rgetattr(obj, "foo.bar.baz")`
+    Reference: https://stackoverflow.com/a/31174427
+    """
+
+    def _getattr(obj, attr):
+        return getattr(obj, attr, *args)
+
+    return functools.reduce(_getattr, [obj] + attr.split("."))
+
+
+def rhasattr(obj, attr):
+    """A chain-able attribute version of hasattr. For example, to check if
+    `obj` has the attribute `foo.bar.baz`, you can use:
+        `rhasattr(obj, "foo.bar.baz")`
+    Reference: https://stackoverflow.com/a/67303315
+    """
+    _nested_attrs = attr.split(".")
+    _curr_obj = obj
+    for _a in _nested_attrs[:-1]:
+        if hasattr(_curr_obj, _a):
+            _curr_obj = getattr(_curr_obj, _a)
+        else:
+            return False
+    return hasattr(_curr_obj, _nested_attrs[-1])
+
+
+def findattr(obj, attrs):
+    for attr in attrs:
+        if rhasattr(obj, attr):
+            return rgetattr(obj, attr)
+
+
+def hf_get_causal_hidden_layers(model: nn.Module):
+    """Returns the hidden layers of the specified model.
+    NOTE: Different model configurations have different hidden layer attribute names.
+        - transformer.h: (BloomForCausalLM, GPT2LMHeadModel, GPTJForCausalLM)
+        - model.decoder.layers: (OPTForCausalLM)
+        - gpt_neox.layers: (GPTNeoXForCausalLM)
+    """
+    hidden_layers_attrs = (
+        "transformer.h",
+        "model.decoder.layers",
+        "gpt_neox.layers",
+        "transformer.layers",
+    )
+    return findattr(model, hidden_layers_attrs)
+
+
 if __name__ == "__main__":
     # MODEL_PATH = "Dahoas/gptneo-sft-static"
     MODEL_PATH = "EleutherAI/pythia-1.4b-deduped"
@@ -346,7 +400,7 @@ if __name__ == "__main__":
     model = GPTRewardModel(MODEL_PATH, tokenizer(tokenizer.pad_token)["input_ids"][0])
 
     # Freeze the first 70% of the hidden layers of the reward model backbone
-    layers = model.transformer.h
+    layers = hf_get_causal_hidden_layers(model)
     num_layers = len(layers)
     num_unfrozen = int(0.7 * num_layers)
     for layer in layers[:-num_unfrozen]:
