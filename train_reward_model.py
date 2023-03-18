@@ -239,6 +239,8 @@ class MyCallback(TrainerCallback):
 
         grouped_preds = []
         for x in batch(preds, 4):
+            print()
+            print(x)
             grouped_preds.append(
                 [
                     x[0][0],
