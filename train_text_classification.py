@@ -107,7 +107,7 @@ def compute_metrics(eval_pred):
         "ndcg": ndcg_score(labels, scipy.special.softmax(predictions, axis=1), k=2)
     }
     acc = accuracy.compute(predictions=np.argmax(predictions, axis=1), references=labels)
-    results = results.update(acc)
+    results.update(acc)
     print(results)
     return results
 
