@@ -306,8 +306,8 @@ class MyCallback(TrainerCallback):
 
 if __name__ == "__main__":
     # MODEL_PATH = "Dahoas/gptneo-sft-static"
-    MODEL_PATH = "gpt2"
-    TOKENIZER_PATH = "gpt2"
+    MODEL_PATH = "EleutherAI/pythia-1.4b-deduped"
+    TOKENIZER_PATH = "EleutherAI/pythia-1.4b-deduped"
     # MODEL_PATH = "AlekseyKorshuk/gpt-neo-125M-sft"
 
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH, truncation_side="left")
