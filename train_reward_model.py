@@ -228,7 +228,7 @@ class MyCallback(TrainerCallback):
             samples["rejected"].append(ele["rejected"])
             samples["scores"].append(preds[i].tolist())
         # Subtracting rejected scores from chosen scores
-        ground_truth = [1] * len(preds[:, 0])
+        ground_truth = [0] * len(preds[:, 0])
         ndcg = ndcg_score(ground_truth, scipy.special.softmax(preds, axis=1), k=2)
         diff = preds[:, 0] - preds[:, 1]
         acc = (diff >= 0).type(torch.float32).mean().item()
