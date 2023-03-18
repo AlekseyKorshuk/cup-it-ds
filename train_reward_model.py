@@ -22,8 +22,8 @@ def create_comparison_dataset(dataset):
             continue
         # if len(chosen_summary.split()) < 5 or len(rejected_summary.split()) < 5:
         #     continue
-        pair["chosen"] = prompt + "<|endoftext|>" + chosen_summary
-        pair["rejected"] = prompt + "<|endoftext|>" + rejected_summary
+        pair["chosen"] = prompt + "\n\n" + chosen_summary
+        pair["rejected"] = prompt + "\n\n" + rejected_summary
         pairs.append(pair)
     return pairs
 
