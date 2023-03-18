@@ -121,7 +121,7 @@ label2id = {"0": 0, "1": 1}
 from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
 
 model = AutoModelForSequenceClassification.from_pretrained(
-    model_path, num_labels=len(id2label.keys()), id2label=id2label, label2id=label2id
+    model_path, num_labels=len(id2label.keys()), id2label=id2label, label2id=label2id, ignore_mismatched_sizes=True
 )
 
 training_args = TrainingArguments(
