@@ -1,3 +1,7 @@
+from datasets import load_dataset
+
+imdb = load_dataset("imdb")
+
 from transformers import AutoTokenizer
 
 tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
