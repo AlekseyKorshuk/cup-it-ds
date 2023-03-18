@@ -267,7 +267,7 @@ class MyCallback(TrainerCallback):
         sk_ndcg = {}
         for k in range(1, 5 + 1):
             sk_ndcg_ = sk_ndcg_score(
-                y_true=[[0, 1, 2, 3, 4]] * len(grouped_preds),
+                y_true=[[4, 3, 2, 1, 0]] * len(grouped_preds),
                 y_score=scipy.special.softmax(grouped_preds, axis=1),
                 k=k
             )
@@ -276,7 +276,7 @@ class MyCallback(TrainerCallback):
         pair_sk_ndcg = {}
         for k in range(1, 5 + 1):
             sk_ndcg_ = sk_ndcg_score(
-                y_true=[[0, 1]] * len(preds),
+                y_true=[[1, 0]] * len(preds),
                 y_score=scipy.special.softmax(preds, axis=1),
                 k=k
             )
