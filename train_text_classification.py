@@ -1,7 +1,7 @@
 import scipy
 from datasets import load_dataset
 
-model_path = "microsoft/deberta-v3-large"
+model_path = "roberta-large"
 imdb = load_dataset("ummagumm-a/cup-it-ds-classification")
 
 from transformers import AutoTokenizer
