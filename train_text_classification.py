@@ -112,13 +112,15 @@ def compute_metrics(eval_pred):
     return results
 
 
-id2label = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4"}
-label2id = {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4}
+# id2label = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4"}
+# label2id = {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4}
+id2label = {0: "0", 1: "1"}
+label2id = {"0": 0, "1": 1}
 
 from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
 
 model = AutoModelForSequenceClassification.from_pretrained(
-    "distilbert-base-uncased", num_labels=5, id2label=id2label, label2id=label2id
+    "ummagumm-a/cup-it-ds-classification", num_labels=len(id2label.keys()), id2label=id2label, label2id=label2id
 )
 
 training_args = TrainingArguments(
