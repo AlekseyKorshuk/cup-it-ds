@@ -139,6 +139,7 @@ class SparsePairwiseTrainer(Trainer):
         loss = -torch.log(torch.sigmoid(chosen_rewards - rejected_rewards)).mean()
         return (loss, rewards) if return_outputs else loss
 
+
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.metrics import make_scorer
@@ -215,6 +216,13 @@ def ndcg_score(ground_truth, predictions, k=5):
 
     return np.mean(scores)
 
+
+def batch(iterable, n=1):
+    l = len(iterable)
+    for ndx in range(0, l, n):
+        yield iterable[ndx:min(ndx + n, l)]
+
+
 class MyCallback(TrainerCallback):
     def on_evaluate(self, args, state, control, metrics, **kwargs):
         # print(state, metrics)
@@ -229,6 +237,21 @@ class MyCallback(TrainerCallback):
             samples["rejected"].append(ele["rejected"])
             samples["scores"].append(preds[i].tolist())
 
+        grouped_preds = []
+        for x in batch(preds, 4):
+            grouped_preds.append(
+                [
+                    x[0][0],
+                    x[1][0],
+                    x[2][0],
+                    x[3][0],
+                    x[3][1],
+                ]
+            )
+
+        ground_truth = [0] * len(grouped_preds)
+        ndcg_grouped = ndcg_score(ground_truth, scipy.special.softmax(grouped_preds, axis=1), k=5)
+
         # preds = [[-12, 23], [-12, 23]]
         # prompt_dict = {}
         # for row, pred in
@@ -241,14 +264,14 @@ class MyCallback(TrainerCallback):
 
         # Subtracting rejected scores from chosen scores
         ground_truth = [0] * len(preds[:, 0])
-        ndcg = ndcg_score(ground_truth, scipy.special.softmax(preds, axis=1), k=2)
+        ndcg_pair = ndcg_score(ground_truth, scipy.special.softmax(preds, axis=1), k=2)
         diff = preds[:, 0] - preds[:, 1]
         acc = (diff >= 0).type(torch.float32).mean().item()
         if torch.distributed.get_rank() == 0:
             print("Testing accuracy: ", acc)
             if torch.distributed.get_rank() == 0:
                 wandb.log({"samples": wandb.Table(data=pd.DataFrame(samples))})
-                wandb.log({"acc": acc, "ndcg": ndcg})
+                wandb.log({"acc": acc, "ndcg_pair": ndcg_pair, "ndcg_grouped": ndcg_grouped})
 
 
 if __name__ == "__main__":
