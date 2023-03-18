@@ -273,19 +273,20 @@ class MyCallback(TrainerCallback):
             )
             sk_ndcg[f"sk_ndcg/k={k}"] = sk_ndcg_
 
-        # preds = [[-12, 23], [-12, 23]]
-        # prompt_dict = {}
-        # for row, pred in
-        #
-        #
-        # 0 > 1 > 2 > 3 > 4
-        # a b c d e
-        # model(0) -> a
-        # model(1) -> b
 
-        # Subtracting rejected scores from chosen scores
         ground_truth = [0] * len(preds[:, 0])
         ndcg_pair = ndcg_score(ground_truth, scipy.special.softmax(preds, axis=1), k=2)
+
+        # sk_ndcg = {}
+        # for k in range(1, 5 + 1):
+        #     sk_ndcg_ = sk_ndcg_score(
+        #         y_true=[[0, 1, 2, 3, 4]] * len(grouped_preds),
+        #         y_score=scipy.special.softmax(grouped_preds, axis=1),
+        #         k=k
+        #     )
+        #     sk_ndcg[f"sk_ndcg/k={k}"] = sk_ndcg_
+
+        # Subtracting rejected scores from chosen scores
         diff = preds[:, 0] - preds[:, 1]
         acc = (diff >= 0).type(torch.float32).mean().item()
         if torch.distributed.get_rank() == 0:
