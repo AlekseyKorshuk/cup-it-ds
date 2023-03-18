@@ -1,11 +1,12 @@
 import scipy
 from datasets import load_dataset
 
+model_path = "microsoft/deberta-xlarge-mnli"
 imdb = load_dataset("ummagumm-a/cup-it-ds-classification")
 
 from transformers import AutoTokenizer
 
-tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 
 def preprocess_function(examples):
@@ -120,7 +121,7 @@ label2id = {"0": 0, "1": 1}
 from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
 
 model = AutoModelForSequenceClassification.from_pretrained(
-    "distilbert-base-uncased", num_labels=len(id2label.keys()), id2label=id2label, label2id=label2id
+    model_path, num_labels=len(id2label.keys()), id2label=id2label, label2id=label2id
 )
 
 training_args = TrainingArguments(
