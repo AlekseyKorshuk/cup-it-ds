@@ -262,7 +262,7 @@ if __name__ == "__main__":
         evaluation_strategy="steps",
         per_device_train_batch_size=8,
         per_device_eval_batch_size=8,
-        eval_steps=100,
+        eval_steps=10,
         save_steps=1,
         warmup_steps=100,
         logging_dir="./logs",
