@@ -1,6 +1,6 @@
 from datasets import load_dataset
 
-imdb = load_dataset("imdb")
+imdb = load_dataset("AlekseyKorshuk/cup-it-ds-classification")
 
 from transformers import AutoTokenizer
 
