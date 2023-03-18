@@ -210,7 +210,7 @@ if __name__ == "__main__":
         layer.requires_grad_(False)
 
     # Create the comparisons datasets
-    data_path = "AlekseyKorshuk/cup-it-ds-pairwise-small"
+    data_path = "AlekseyKorshuk/cup-it-ds-pairwise"
     # data_path = "Dahoas/rm-static"
     # data_path = "CarperAI/openai_summarize_comparisons"
 
