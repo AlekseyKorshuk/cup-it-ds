@@ -259,7 +259,10 @@ class MyCallback(TrainerCallback):
             )
 
         ground_truth = [0] * len(grouped_preds)
-        ndcg_grouped = ndcg_score(ground_truth, scipy.special.softmax(grouped_preds, axis=1), k=5)
+        custom_ndcg = {}
+        for k in range(1, 5 + 1):
+            ndcg_ = ndcg_score(ground_truth, scipy.special.softmax(grouped_preds, axis=1), k=k)
+            custom_ndcg[f"custom_ndcg/k={k}"] = ndcg_
 
         sk_ndcg = {}
         for k in range(1, 5 + 1):
@@ -289,8 +292,9 @@ class MyCallback(TrainerCallback):
             print("Testing accuracy: ", acc)
             if torch.distributed.get_rank() == 0:
                 wandb.log({"samples": wandb.Table(data=pd.DataFrame(samples))})
-                results = {"acc": acc, "ndcg_pair": ndcg_pair, "ndcg_grouped": ndcg_grouped}
+                results = {"acc": acc, "ndcg_pair": ndcg_pair}
                 results.update(sk_ndcg)
+                results.update(custom_ndcg)
                 wandb.log(results)
 
 
