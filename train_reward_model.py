@@ -223,11 +223,16 @@ def batch(iterable, n=1):
         yield iterable[ndx:min(ndx + n, l)]
 
 
+from sklearn.metrics import ndcg_score as sk_ndcg_score
+
+
 class MyCallback(TrainerCallback):
     def on_evaluate(self, args, state, control, metrics, **kwargs):
         # print(state, metrics)
         preds = torch.tensor(trainer.predict(val_dataset)[0])
+        print("before", preds.shape)
         preds = preds.view(-1, 2)
+        print("after", preds.shape)
 
         samples = {"prompt": [], "chosen": [], "rejected": [], "scores": []}
         for i in range(16):
