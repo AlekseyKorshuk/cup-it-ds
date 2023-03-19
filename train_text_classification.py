@@ -1,10 +1,14 @@
 import scipy
 from datasets import load_dataset
+from transformers import AutoTokenizer
+from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
+from transformers import DataCollatorWithPadding
+import evaluate
+import numpy as np
+from sklearn.preprocessing import LabelBinarizer
 
 model_path = "roberta-large"
 imdb = load_dataset("ummagumm-a/cup-it-ds-classification")
-
-from transformers import AutoTokenizer
 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 
@@ -15,19 +19,9 @@ def preprocess_function(examples):
 
 tokenized_imdb = imdb.map(preprocess_function, batched=True)
 
-from transformers import DataCollatorWithPadding
-
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
-import evaluate
-
 accuracy = evaluate.load("accuracy")
-
-import numpy as np
-
-import numpy as np
-from sklearn.preprocessing import LabelBinarizer
-from sklearn.metrics import make_scorer
 
 
 def dcg_score(y_true, y_score, k=5):
@@ -117,8 +111,6 @@ def compute_metrics(eval_pred):
 # label2id = {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4}
 id2label = {0: "0", 1: "1"}
 label2id = {"0": 0, "1": 1}
-
-from transformers import AutoModelForSequenceClassification, TrainingArguments, Trainer
 
 model = AutoModelForSequenceClassification.from_pretrained(
     model_path, num_labels=len(id2label.keys()), id2label=id2label, label2id=label2id, ignore_mismatched_sizes=True

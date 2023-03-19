@@ -1,5 +1,6 @@
 import functools
 import os
+import argparse
 
 import pandas as pd
 import scipy
@@ -15,6 +16,15 @@ import wandb
 from sklearn.metrics import ndcg_score as sk_ndcg_score
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer
+
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--model_path", type=str)
+    parser.add_argument("--dataset_path", type=str)
+    parser.add_argument("--output_dir", type=str)
+    args = parser.parse_args()
+    return args
 
 
 def create_comparison_dataset(dataset):
@@ -286,9 +296,10 @@ def hf_get_causal_hidden_layers(model: nn.Module):
 
 
 if __name__ == "__main__":
-    MODEL_PATH = "AlekseyKorshuk/cup-it-ds-sft-pretrained"
-    TOKENIZER_PATH = "AlekseyKorshuk/cup-it-ds-sft-pretrained"
-    data_path = "AlekseyKorshuk/cup-it-ds-pairwise"
+    args = parse_args()
+    MODEL_PATH = args.model_path
+    TOKENIZER_PATH = args.model_path
+    data_path = args.dataset_path
 
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH, truncation_side="left")
     tokenizer.pad_token = tokenizer.eos_token
@@ -299,7 +310,7 @@ if __name__ == "__main__":
     training_args = TrainingArguments(
         do_train=True,
         do_eval=True,
-        output_dir="rm_checkpoint/no-context/",
+        output_dir=f"rm_checkpoint/{args.output_dir}/",
         num_train_epochs=1,
         logging_steps=10,
         gradient_accumulation_steps=2,
