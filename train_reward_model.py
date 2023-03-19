@@ -435,7 +435,7 @@ if __name__ == "__main__":
             split=f"train[{validation_split_percentage}%:]",
         )
 
-    dataset["train"] = dataset["train"].shuffle(seed=42)
+    # dataset["train"] = dataset["train"].shuffle(seed=42)
     train_pairs = create_comparison_dataset(dataset["train"])
     val_pairs = create_comparison_dataset(dataset[validation_split_name])
 
