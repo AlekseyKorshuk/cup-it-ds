@@ -50,7 +50,7 @@ model.eval()
 model.cuda()
 max_length = 512
 
-for row in ds:
+for row in tqdm(ds):
     prompt = row["text"]
     scores = []
     for comment in row["comments"]:
