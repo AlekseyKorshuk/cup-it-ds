@@ -369,7 +369,7 @@ if __name__ == "__main__":
     training_args = TrainingArguments(
         do_train=True,
         do_eval=True,
-        output_dir="rm_checkpoint/",
+        output_dir="rm_checkpoint/no-context/",
         num_train_epochs=1,
         logging_steps=10,
         gradient_accumulation_steps=2,
@@ -377,7 +377,7 @@ if __name__ == "__main__":
         evaluation_strategy="steps",
         per_device_train_batch_size=8,
         per_device_eval_batch_size=8,
-        eval_steps=100,
+        eval_steps=500,
         save_steps=1,
         warmup_steps=100,
         logging_dir="./logs",
@@ -417,7 +417,7 @@ if __name__ == "__main__":
             split=f"train[{validation_split_percentage}%:]",
         )
 
-    # dataset["train"] = dataset["train"].shuffle(seed=42)
+    dataset["train"] = dataset["train"].shuffle(seed=42)
     train_pairs = create_comparison_dataset(dataset["train"])
     val_pairs = create_comparison_dataset(dataset[validation_split_name])
 
