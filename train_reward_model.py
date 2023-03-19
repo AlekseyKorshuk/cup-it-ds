@@ -12,7 +12,6 @@ from torch.utils.data import Dataset
 from tqdm import tqdm
 from transformers import AutoTokenizer, Trainer, TrainingArguments, TrainerCallback
 import wandb
-import re
 
 
 def create_comparison_dataset(dataset):
@@ -24,8 +23,6 @@ def create_comparison_dataset(dataset):
         rejected_summary = sample["rejected"]
         if chosen_summary == rejected_summary:
             continue
-        # if len(chosen_summary.split()) < 5 or len(rejected_summary.split()) < 5:
-        #     continue
         pair["chosen"] = prompt + "\n\n" + chosen_summary
         pair["rejected"] = prompt + "\n\n" + rejected_summary
         pairs.append(pair)
@@ -359,10 +356,9 @@ def hf_get_causal_hidden_layers(model: nn.Module):
 
 
 if __name__ == "__main__":
-    # MODEL_PATH = "Dahoas/gptneo-sft-static"
-    MODEL_PATH = "gpt2"
-    TOKENIZER_PATH = "gpt2"
-    # MODEL_PATH = "AlekseyKorshuk/gpt-neo-125M-sft"
+    MODEL_PATH = "AlekseyKorshuk/cup-it-ds-sft-pretrained"
+    TOKENIZER_PATH = "AlekseyKorshuk/cup-it-ds-sft-pretrained"
+    data_path = "AlekseyKorshuk/cup-it-ds-pairwise"
 
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH, truncation_side="left")
     tokenizer.pad_token = tokenizer.eos_token
@@ -407,20 +403,6 @@ if __name__ == "__main__":
         layer.requires_grad_(False)
 
     # Create the comparisons datasets
-    data_path = "AlekseyKorshuk/cup-it-ds-pairwise-small"
-    # data_path = "Dahoas/rm-static"
-    # data_path = "CarperAI/openai_summarize_comparisons"
-
-    # dataset = load_dataset(data_path)
-    # dataset["test"] = load_dataset(
-    #     data_path,
-    #     split=f"train[:{5}%]",
-    # )
-    # dataset["train"] = load_dataset(
-    #     data_path,
-    #     split=f"train[{5}%:{50}%]",
-    # )
-
     validation_split_name = "validation"
     validation_split_percentage = 5
 
