@@ -26,6 +26,6 @@ deepspeed train_reward_model.py \
 ```bash
 deepspeed train_reward_model.py \
   --model_path AlekseyKorshuk/cup-it-ds-sft-pretrained \
-  --dataset_path ummagumm-a/cup-it-ds-classification-pairwise \
+  --dataset_path ummagumm-a/cup-it-ds-classification-pairwise-train-val \
   --output_dir with-context
 ```

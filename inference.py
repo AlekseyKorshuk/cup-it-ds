@@ -5,7 +5,7 @@ from datasets import load_dataset
 from tqdm import tqdm
 import pandas as pd
 
-from train_reward_model_gptj import PairwiseDataset
+from train_reward_model import PairwiseDataset
 
 
 def pairwise_data_collator(data):
@@ -70,14 +70,14 @@ pdb.set_trace()
 
 # data = {'input_ids': batch["input_ids"][0].unsqueeze(0), 'attention_mask': batch["attention_mask"][0].unsqueeze(0)}
 
-# repo_id="AlekseyKorshuk/rm-efficient-bush-363-checkpoint-12030"
-#
-# from huggingface_hub import HfApi
-# api = HfApi()
-# api.create_repo(repo_id=repo_id, exist_ok=True)
-# api.upload_file(
-#     path_or_fileobj="./rm_checkpoint/checkpoint-12030/pytorch_model.bin",
-#     path_in_repo="pytorch_model.bin",
-#     repo_id=repo_id,
-# )
-#
+repo_id = "AlekseyKorshuk/cup-it-ds-reward-model-no-context"
+
+from huggingface_hub import HfApi
+
+api = HfApi()
+api.create_repo(repo_id=repo_id, exist_ok=True)
+api.upload_file(
+    path_or_fileobj="./rm_checkpoint/no-context/pytorch_model.bin",
+    path_in_repo="pytorch_model.bin",
+    repo_id=repo_id,
+)
