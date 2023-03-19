@@ -4,6 +4,7 @@ from transformers import AutoTokenizer
 from datasets import load_dataset
 from tqdm import tqdm
 import pandas as pd
+import json
 
 from train_reward_model import PairwiseDataset
 
@@ -22,6 +23,13 @@ def pairwise_data_collator(data):
 def get_dataset():
     ds = load_dataset("AlekseyKorshuk/cup-it-ds")["test"].to_dict()
     return [dict(zip(ds, t)) for t in zip(*ds.values())]
+
+
+def get_positions(scores):
+    n = len(scores)
+    sorted_positions = sorted(range(n), key=lambda k: scores[k], reverse=True)
+    positions = [sorted_positions.index(i) for i in range(n)]
+    return positions
 
 
 ds = get_dataset()
@@ -55,8 +63,17 @@ for row in ds:
         ).to("cuda")
         with torch.no_grad():
             output = model(**encodings_dict)
-        print(output)
-        rewards = output[:, -1]
+        # print(output)
+        reward = output[0][0]
+        scores.append(reward)
+    positions = get_positions(scores)
+    for comment, position in zip(row["comments"], positions):
+        comment["score"] = position
+
+with open('no-context-output.jsonl', 'w') as outfile:
+    for entry in ds:
+        json.dump(entry, outfile)
+        outfile.write('\n')
 
 
 # data = load_dataset("AlekseyKorshuk/synthetic-instruct-gptj-pairwise")
