@@ -12,6 +12,9 @@ from torch.utils.data import Dataset
 from tqdm import tqdm
 from transformers import AutoTokenizer, Trainer, TrainingArguments, TrainerCallback
 import wandb
+from sklearn.metrics import ndcg_score as sk_ndcg_score
+import numpy as np
+from sklearn.preprocessing import LabelBinarizer
 
 
 def create_comparison_dataset(dataset):
@@ -140,27 +143,7 @@ class SparsePairwiseTrainer(Trainer):
         return (loss, rewards) if return_outputs else loss
 
 
-import numpy as np
-from sklearn.preprocessing import LabelBinarizer
-from sklearn.metrics import make_scorer
-
-
 def dcg_score(y_true, y_score, k=5):
-    """Discounted cumulative gain (DCG) at rank K.
-
-    Parameters
-    ----------
-    y_true : array, shape = [n_samples]
-        Ground truth (true relevance labels).
-    y_score : array, shape = [n_samples, n_classes]
-        Predicted scores.
-    k : int
-        Rank.
-
-    Returns
-    -------
-    score : float
-    """
     order = np.argsort(y_score)[::-1]
     y_true = np.take(y_true, order[:k])
 
@@ -171,36 +154,6 @@ def dcg_score(y_true, y_score, k=5):
 
 
 def ndcg_score(ground_truth, predictions, k=5):
-    """Normalized discounted cumulative gain (NDCG) at rank K.
-
-    Normalized Discounted Cumulative Gain (NDCG) measures the performance of a
-    recommendation system based on the graded relevance of the recommended
-    entities. It varies from 0.0 to 1.0, with 1.0 representing the ideal
-    ranking of the entities.
-
-    Parameters
-    ----------
-    ground_truth : array, shape = [n_samples]
-        Ground truth (true labels represended as integers).
-    predictions : array, shape = [n_samples, n_classes]
-        Predicted probabilities.
-    k : int
-        Rank.
-
-    Returns
-    -------
-    score : float
-
-    Example
-    -------
-    >>> ground_truth = [1, 0, 2]
-    >>> predictions = [[0.15, 0.55, 0.2], [0.7, 0.2, 0.1], [0.06, 0.04, 0.9]]
-    >>> score = ndcg_score(ground_truth, predictions, k=2)
-    1.0
-    >>> predictions = [[0.9, 0.5, 0.8], [0.7, 0.2, 0.1], [0.06, 0.04, 0.9]]
-    >>> score = ndcg_score(ground_truth, predictions, k=2)
-    0.6666666666
-    """
     lb = LabelBinarizer()
     lb.fit(range(len(predictions) + 1))
     T = lb.transform(ground_truth)
@@ -223,16 +176,10 @@ def batch(iterable, n=1):
         yield iterable[ndx:min(ndx + n, l)]
 
 
-from sklearn.metrics import ndcg_score as sk_ndcg_score
-
-
 class MyCallback(TrainerCallback):
     def on_evaluate(self, args, state, control, metrics, **kwargs):
-        # print(state, metrics)
         preds = torch.tensor(trainer.predict(val_dataset)[0])
-        print("before", preds.shape)
         preds = preds.view(-1, 2)
-        print("after", preds.shape)
 
         samples = {"prompt": [], "chosen": [], "rejected": [], "scores": []}
         for i in range(16):
@@ -305,12 +252,6 @@ class MyCallback(TrainerCallback):
 
 
 def rgetattr(obj, attr: str, *args):
-    """A chain-able attribute version of getattr. For example, to get the
-    attribute `foo.bar.baz` from `obj`, you can use:
-        `rgetattr(obj, "foo.bar.baz")`
-    Reference: https://stackoverflow.com/a/31174427
-    """
-
     def _getattr(obj, attr):
         return getattr(obj, attr, *args)
 
@@ -318,11 +259,6 @@ def rgetattr(obj, attr: str, *args):
 
 
 def rhasattr(obj, attr):
-    """A chain-able attribute version of hasattr. For example, to check if
-    `obj` has the attribute `foo.bar.baz`, you can use:
-        `rhasattr(obj, "foo.bar.baz")`
-    Reference: https://stackoverflow.com/a/67303315
-    """
     _nested_attrs = attr.split(".")
     _curr_obj = obj
     for _a in _nested_attrs[:-1]:
@@ -340,12 +276,6 @@ def findattr(obj, attrs):
 
 
 def hf_get_causal_hidden_layers(model: nn.Module):
-    """Returns the hidden layers of the specified model.
-    NOTE: Different model configurations have different hidden layer attribute names.
-        - transformer.h: (BloomForCausalLM, GPT2LMHeadModel, GPTJForCausalLM)
-        - model.decoder.layers: (OPTForCausalLM)
-        - gpt_neox.layers: (GPTNeoXForCausalLM)
-    """
     hidden_layers_attrs = (
         "transformer.h",
         "model.decoder.layers",
@@ -386,7 +316,6 @@ if __name__ == "__main__":
         learning_rate=1e-5,
         deepspeed="ds_config_gpt_j.json",
         weight_decay=0.01,
-        # save_total_limit=5,
         report_to="wandb"
     )
 
