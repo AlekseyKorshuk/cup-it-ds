@@ -20,16 +20,13 @@ def pairwise_data_collator(data):
 
 
 def get_dataset():
-    ds = load_dataset("AlekseyKorshuk/cup-it-ds")["test"]
-    return ds
+    ds = load_dataset("AlekseyKorshuk/cup-it-ds")["test"].to_dict()
+    return [dict(zip(ds, t)) for t in zip(*ds.values())]
 
 
 ds = get_dataset()
 
-for row in
-
-
-tokenizer = AutoTokenizer.from_pretrained("gpt2")
+tokenizer = AutoTokenizer.from_pretrained("gpt2", truncation_side="left")
 tokenizer.pad_token = tokenizer.eos_token
 
 PAD_ID = tokenizer("<|endoftext|>")["input_ids"][0]
@@ -43,12 +40,29 @@ model.load_state_dict(torch.load("./rm_checkpoint/no-context/checkpoint-4956/pyt
 model.half()  # Converts to fp16 for faster inference
 model.eval()
 model.cuda()
-
-data = load_dataset("AlekseyKorshuk/synthetic-instruct-gptj-pairwise")
 max_length = 512
-eval_dataset = PairwiseDataset(data["test"], tokenizer, max_length=max_length)
-batch_size = 1
-dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=batch_size, collate_fn=pairwise_data_collator)
+
+for row in ds:
+    prompt = row["prompt"]
+    scores = []
+    for comment in row["comments"]:
+        encodings_dict = tokenizer(
+            "<|startoftext|>" + prompt + "\n\n" + comment["text"] + "<|endoftext|>",
+            truncation=True,
+            max_length=max_length,
+            padding="max_length",
+            return_tensors="pt",
+        ).to("cuda")
+        with torch.no_grad():
+            output = model(**encodings_dict)
+        print(output)
+        rewards = output[:, -1]
+
+
+# data = load_dataset("AlekseyKorshuk/synthetic-instruct-gptj-pairwise")
+# eval_dataset = PairwiseDataset(data["test"], tokenizer, max_length=max_length)
+# batch_size = 1
+# dataloader = torch.utils.data.DataLoader(eval_dataset, batch_size=batch_size, collate_fn=pairwise_data_collator)
 
 
 def gen(inputs):
@@ -61,19 +75,19 @@ def gen(inputs):
     return rewards
 
 
-cnt = 0
-chosen_rewards = []
-rejected_rewards = []
-for i, batch in tqdm(enumerate(dataloader)):
-    if i > 1000:
-        break
-    rewards = gen(batch)
-    chosen_rewards += rewards[:rewards.shape[0] // 2].tolist()
-    rejected_rewards += rewards[rewards.shape[0] // 2:].tolist()
-    # accuracy.append(int(chosen_rewards[0] > rejected_rewards[0]))
-
-accuracy = [int(chosen > rejected) for chosen, rejected in zip(chosen_rewards, rejected_rewards)]
-print(pd.DataFrame(accuracy).describe())
+# cnt = 0
+# chosen_rewards = []
+# rejected_rewards = []
+# for i, batch in tqdm(enumerate(dataloader)):
+#     if i > 1000:
+#         break
+#     rewards = gen(batch)
+#     chosen_rewards += rewards[:rewards.shape[0] // 2].tolist()
+#     rejected_rewards += rewards[rewards.shape[0] // 2:].tolist()
+#     # accuracy.append(int(chosen_rewards[0] > rejected_rewards[0]))
+#
+# accuracy = [int(chosen > rejected) for chosen, rejected in zip(chosen_rewards, rejected_rewards)]
+# print(pd.DataFrame(accuracy).describe())
 
 import pdb;
 
