@@ -1,5 +1,9 @@
 # CUP IT | Hackathon
 
+## Weights & Biases Report
+
+https://wandb.ai/aleksey-korshuk/huggingface/reports/CUP-IT-Report--VmlldzozODMzODI0
+
 ## Train SFT model
 
 ```bash
