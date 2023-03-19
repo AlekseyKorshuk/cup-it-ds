@@ -24,11 +24,12 @@ tokenizer.pad_token = tokenizer.eos_token
 
 PAD_ID = tokenizer("<|endoftext|>")["input_ids"][0]
 
-MODEL_PATH = "EleutherAI/gpt-neo-125M"
+MODEL_PATH = "gpt2"
 
 model = GPTRewardModel(MODEL_PATH, tokenizer(tokenizer.pad_token)["input_ids"][0])
 
-model.load_state_dict(torch.load("./rm_checkpoint/checkpoint-3008/pytorch_model.bin"))
+model.load_state_dict(torch.load("./reward_model/no-context/pytorch_model.bin"),
+                      strict=True)
 model.half()  # Converts to fp16 for faster inference
 model.eval()
 model.cuda()
@@ -69,15 +70,3 @@ import pdb;
 pdb.set_trace()
 
 # data = {'input_ids': batch["input_ids"][0].unsqueeze(0), 'attention_mask': batch["attention_mask"][0].unsqueeze(0)}
-
-repo_id = "AlekseyKorshuk/cup-it-ds-reward-model-no-context"
-
-from huggingface_hub import HfApi
-
-api = HfApi()
-api.create_repo(repo_id=repo_id, exist_ok=True)
-api.upload_file(
-    path_or_fileobj="./rm_checkpoint/no-context/pytorch_model.bin",
-    path_in_repo="pytorch_model.bin",
-    repo_id=repo_id,
-)
