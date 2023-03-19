@@ -18,8 +18,11 @@ import numpy as np
 from sklearn.preprocessing import LabelBinarizer
 import deepspeed
 
+
 def parse_args():
     parser = argparse.ArgumentParser()
+    parser.add_argument('--local_rank', type=int, default=-1,
+                        help='local rank passed from distributed launcher')
     parser.add_argument("--model_path", type=str)
     parser.add_argument("--dataset_path", type=str)
     parser.add_argument("--output_dir", type=str)
