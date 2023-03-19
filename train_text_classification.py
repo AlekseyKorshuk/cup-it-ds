@@ -125,14 +125,14 @@ model = AutoModelForSequenceClassification.from_pretrained(
 )
 
 training_args = TrainingArguments(
-    output_dir="/tmp/bert",
+    output_dir="/tmp/roberta",
     learning_rate=2e-5,
     per_device_train_batch_size=16,
     per_device_eval_batch_size=16,
     num_train_epochs=2,
     weight_decay=0.01,
-    evaluation_strategy="steps",
-    eval_steps=100,
+    evaluation_strategy="epoch",
+    eval_steps=1,
     save_strategy="epoch",
     save_steps=1,
     # load_best_model_at_end=True,
