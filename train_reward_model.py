@@ -16,13 +16,14 @@ import wandb
 from sklearn.metrics import ndcg_score as sk_ndcg_score
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer
-
+import deepspeed
 
 def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model_path", type=str)
     parser.add_argument("--dataset_path", type=str)
     parser.add_argument("--output_dir", type=str)
+    parser = deepspeed.add_config_arguments(parser)
     args = parser.parse_args()
     return args
 

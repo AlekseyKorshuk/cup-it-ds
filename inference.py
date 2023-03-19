@@ -19,6 +19,16 @@ def pairwise_data_collator(data):
         raise ValueError("Invalid data format")
 
 
+def get_dataset():
+    ds = load_dataset("AlekseyKorshuk/cup-it-ds")["test"]
+    return ds
+
+
+ds = get_dataset()
+
+for row in
+
+
 tokenizer = AutoTokenizer.from_pretrained("gpt2")
 tokenizer.pad_token = tokenizer.eos_token
 
@@ -55,8 +65,8 @@ cnt = 0
 chosen_rewards = []
 rejected_rewards = []
 for i, batch in tqdm(enumerate(dataloader)):
-    # if i > 1000:
-    #     break
+    if i > 1000:
+        break
     rewards = gen(batch)
     chosen_rewards += rewards[:rewards.shape[0] // 2].tolist()
     rejected_rewards += rewards[rewards.shape[0] // 2:].tolist()
