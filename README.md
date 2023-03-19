@@ -33,3 +33,12 @@ deepspeed train_reward_model.py \
   --dataset_path ummagumm-a/cup-it-ds-classification-pairwise-train-val \
   --output_dir with-context
 ```
+
+## Inference
+
+To generate scores for test dataset:
+
+```bash
+wget  https://huggingface.co/AlekseyKorshuk/cup-it-ds-reward-model-no-context/resolve/main/pytorch_model.bin -O ./rm_checkpoint/no-context/checkpoint-4956/pytorch_model.bin
+python3 inference.py
+```
