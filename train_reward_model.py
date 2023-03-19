@@ -308,13 +308,13 @@ if __name__ == "__main__":
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH, truncation_side="left")
     tokenizer.pad_token = tokenizer.eos_token
 
-    if not os.path.exists("no-context"):
-        os.mkdir("no-context")
+    if not os.path.exists("rm_checkpoint"):
+        os.mkdir("rm_checkpoint")
 
     training_args = TrainingArguments(
         do_train=True,
         do_eval=True,
-        output_dir=f"no-context/{args.output_dir}/",
+        output_dir=f"rm_checkpoint/{args.output_dir}/",
         num_train_epochs=1,
         logging_steps=10,
         gradient_accumulation_steps=2,
