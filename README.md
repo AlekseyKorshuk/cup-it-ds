@@ -27,12 +27,16 @@ deepspeed train_reward_model.py \
   --output_dir no-context
 ```
 
+Resulting model: https://huggingface.co/AlekseyKorshuk/cup-it-ds-reward-model-no-context
+
 ```bash
 deepspeed train_reward_model.py \
   --model_path AlekseyKorshuk/cup-it-ds-sft-pretrained \
   --dataset_path ummagumm-a/cup-it-ds-classification-pairwise-train-val \
   --output_dir with-context
 ```
+
+Resulting model: https://huggingface.co/AlekseyKorshuk/cup-it-ds-reward-model-with-context
 
 ## Inference
 
