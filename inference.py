@@ -43,7 +43,7 @@ model.cuda()
 max_length = 512
 
 for row in ds:
-    prompt = row["prompt"]
+    prompt = row["text"]
     scores = []
     for comment in row["comments"]:
         encodings_dict = tokenizer(
