@@ -28,7 +28,7 @@ MODEL_PATH = "gpt2"
 
 model = GPTRewardModel(MODEL_PATH, tokenizer(tokenizer.pad_token)["input_ids"][0])
 
-model.load_state_dict(torch.load("./no-context/no-context/checkpoint-4956/pytorch_model.bin"),
+model.load_state_dict(torch.load("./tmp/no-context/checkpoint-4956/pytorch_model.bin"),
                       strict=True)
 model.half()  # Converts to fp16 for faster inference
 model.eval()
