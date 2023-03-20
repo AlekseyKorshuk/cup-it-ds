@@ -10,9 +10,11 @@ The pairwise training of reward model, as used in the InstructGPT paper by OpenA
 
 For each row in the dataset, a list of comemnts is given with the score from 0 to 4 (0 - best, 4 - worst). We use this data to train a reward model that maps a **(post, comment)** pair to a reward **r**. The reward model is trained to predict which comment a human will prefer, using the rewards as logits.
 
-There are 2 main steps:
+We used first 2 steps from RLHF pipeline:
 - Supervised fine-tuning on the given dataset
 - Reward model training based on comparisons
+
+![ChatGPT-training jpg](https://user-images.githubusercontent.com/48794610/226229590-ef149ca7-acb1-40df-9fa7-cb7fbd39dc6c.png)
 
 ### Reward model training deteils
 
