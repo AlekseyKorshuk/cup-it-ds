@@ -5,7 +5,7 @@
 In this task we are required to sort/range comment in social network. We desided to use reward part from RLHF approach.
 
 ## Exploratory Data Analysis
-Can be found in explore.ipynb.
+Can be found in `explore.ipynb`.
 
 ## Approach
 
