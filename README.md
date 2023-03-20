@@ -12,7 +12,7 @@ For each row in the dataset, a list of comemnts is given with the score from 0 t
 
 There are 2 main steps:
 - Supervised fine-tuning on the given dataset
-- Reward model training based in comparisons
+- Reward model training based on comparisons
 
 ### Reward model training deteils
 
