@@ -87,3 +87,8 @@ To generate scores for test dataset:
 wget  https://huggingface.co/AlekseyKorshuk/cup-it-ds-reward-model-no-context/resolve/main/pytorch_model.bin -O ./rm_checkpoint/no-context/checkpoint-4956/pytorch_model.bin
 python3 inference.py
 ```
+
+# References
+
+- [Training language models to follow instructions with human feedback](https://arxiv.org/abs/2203.02155)
+- [Rewarding Chatbots for Real-World Engagement with Millions of Users](https://arxiv.org/abs/2303.06135)
