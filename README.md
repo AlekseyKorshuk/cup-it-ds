@@ -4,7 +4,7 @@
 
 In this task we are required to sort/range comment in social network. We desided to use reward part from RLHF approach.
 
-## Aproach
+## Approach
 
 The pairwise training of reward model, as used in the InstructGPT paper by OpenAI, is an effective method for rating comments on a given post. This approach allows the model to learn from the relative differences between comments, rather than relying on an absolute rating scale. This is especially useful when the rating scale is inconsistent or not well-defined. By training the model on relative differences between pairs of comments, it becomes less reliant on a predefined rating scale and is better able to generalize to new data. Overall, pairwise training of reward model is a sound choice for training a model to rate comments on a given post, as it enables more nuanced and accurate ratings and is more robust to inconsistencies in the rating scale.
 
