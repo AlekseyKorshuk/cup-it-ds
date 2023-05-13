@@ -45,7 +45,7 @@ for row in tqdm.tqdm(dataset):
         with torch.no_grad():
             output = model(**encodings_dict)
         reward = output[0][0]
-        predictions.append(reward)
+        predictions.append(float(reward))
     comments = row["comments"]
     for comment, result in zip(comments, predictions):
         comment["prediction"] = result
