@@ -143,7 +143,7 @@ training_args = TrainingArguments(
     save_steps=400,
     load_best_model_at_end=True,
     push_to_hub=True,
-    deepspeed="ds_config_gpt_j.json",
+    deepspeed="ds_config_small.json",
     fp16=True
 )
 
