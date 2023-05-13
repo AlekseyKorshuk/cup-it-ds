@@ -8,7 +8,7 @@ import numpy as np
 from sklearn.preprocessing import LabelBinarizer
 
 model_path = "roberta-large"
-imdb = load_dataset("ummagumm-a/cup-it-ds-classification")
+imdb = load_dataset("ummagumm-a/cup_it_ds_split_with_lang_with_topic")
 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 
