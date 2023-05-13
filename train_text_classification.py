@@ -28,7 +28,7 @@ def preprocess_function(examples):
     return tokenized_dict
 
 
-tokenized_dataset = dataset.map(preprocess_function, batched=True, remove_columns=dataset.features)
+tokenized_dataset = dataset.map(preprocess_function, batched=True, remove_columns=dataset["train"].features)
 
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
