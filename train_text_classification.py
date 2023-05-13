@@ -14,7 +14,17 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 
 
 def preprocess_function(examples):
-    return tokenizer(examples["text"], truncation=True)
+    labels = []
+    prepared_examples = []
+    for example in examples:
+        for comment in example["comments"]:
+            prepared_examples.append(
+                example['text'].strip() + tokenizer.sep_token + comment["text"].strip()
+            )
+            labels.append(int(comment["score"]))
+    tokenized_dict = tokenizer(prepared_examples, truncation=True)
+    tokenized_dict["label"] = labels
+    return tokenized_dict
 
 
 tokenized_imdb = imdb.map(preprocess_function, batched=True)
@@ -107,10 +117,10 @@ def compute_metrics(eval_pred):
     return results
 
 
-# id2label = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4"}
-# label2id = {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4}
-id2label = {0: "0", 1: "1"}
-label2id = {"0": 0, "1": 1}
+id2label = {0: "0", 1: "1", 2: "2", 3: "3", 4: "4"}
+label2id = {"0": 0, "1": 1, "2": 2, "3": 3, "4": 4}
+# id2label = {0: "0", 1: "1"}
+# label2id = {"0": 0, "1": 1}
 
 model = AutoModelForSequenceClassification.from_pretrained(
     model_path, num_labels=len(id2label.keys()), id2label=id2label, label2id=label2id, ignore_mismatched_sizes=True
