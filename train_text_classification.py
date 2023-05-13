@@ -8,7 +8,7 @@ import numpy as np
 from sklearn.preprocessing import LabelBinarizer
 
 model_path = "roberta-large"
-imdb = load_dataset("ummagumm-a/cup_it_ds_split_with_lang_with_topic")
+dataset = load_dataset("ummagumm-a/cup_it_ds_split_with_lang_with_topic")
 
 tokenizer = AutoTokenizer.from_pretrained(model_path)
 
@@ -28,7 +28,7 @@ def preprocess_function(examples):
     return tokenized_dict
 
 
-tokenized_imdb = imdb.map(preprocess_function, batched=True)
+tokenized_dataset = dataset.map(preprocess_function, batched=True, remove_columns=dataset.features)
 
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
@@ -147,8 +147,8 @@ training_args = TrainingArguments(
 trainer = Trainer(
     model=model,
     args=training_args,
-    train_dataset=tokenized_imdb["train"],
-    eval_dataset=tokenized_imdb["validation"],
+    train_dataset=tokenized_dataset["train"],
+    eval_dataset=tokenized_dataset["validation"],
     tokenizer=tokenizer,
     data_collator=data_collator,
     compute_metrics=compute_metrics,
