@@ -6,6 +6,7 @@ from transformers import DataCollatorWithPadding
 import evaluate
 import numpy as np
 from sklearn.preprocessing import LabelBinarizer
+import os
 
 model_path = "roberta-large"
 dataset = load_dataset("ummagumm-a/cup_it_ds_split_with_lang_with_topic")
@@ -28,7 +29,11 @@ def preprocess_function(examples):
     return tokenized_dict
 
 
-tokenized_dataset = dataset.map(preprocess_function, batched=True, remove_columns=dataset["train"].features)
+tokenized_dataset = dataset.map(preprocess_function,
+                                batched=True,
+                                remove_columns=dataset["train"].features,
+                                num_proc=os.cpu_count()
+                                )
 
 data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
