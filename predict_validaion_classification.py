@@ -5,7 +5,7 @@ from datasets import load_dataset, Dataset
 
 model_name = "AlekseyKorshuk/roberta"
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = 0 if torch.cuda.is_available() else 'cpu'
 pipe = pipeline("text-classification", model_name, device=device)
 
 top_k = len(pipe.model.config.id2label)
