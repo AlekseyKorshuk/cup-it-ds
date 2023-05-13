@@ -16,6 +16,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_path)
 def preprocess_function(examples):
     labels = []
     prepared_examples = []
+    print(examples)
     for example in examples:
         for comment in example["comments"]:
             prepared_examples.append(
