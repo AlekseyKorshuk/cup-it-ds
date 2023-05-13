@@ -19,7 +19,7 @@ def preprocess_function(examples):
     examples = [dict(zip(examples, t)) for t in zip(*examples.values())]
     for example in examples:
         for comment in example["comments"]:
-            text = f"Topic: {example['topic']}\nTopic probability: {example['topic_prob ']}"
+            text = f"Topic: {example['topic']}\nTopic probability: {example['topic_prob']}"
             text += tokenizer.sep_token
             text += example['text'].strip() + tokenizer.sep_token + comment["text"].strip()
             prepared_examples.append(
