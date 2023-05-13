@@ -14,7 +14,7 @@ dataset = load_dataset("ummagumm-a/cup_it_ds_split_with_lang_with_topic", split=
 
 updated_comments = []
 for row in tqdm.tqdm(dataset):
-    texts = [comment["text"] for comment in row["comments"]]
+    texts = [row["text"].strip() + pipe.tokenizer.sep_token + comment["text"].strip() for comment in row["comments"]]
     results = pipe(texts, top_k=top_k)
     comments = row["comments"]
     for comment, result in zip(comments, results):
