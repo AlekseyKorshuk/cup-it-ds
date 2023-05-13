@@ -6,7 +6,6 @@ from reward_model import GPTRewardModel
 import torch
 from transformers import AutoTokenizer
 from datasets import load_dataset
-from tqdm import tqdm
 import json
 
 tokenizer = AutoTokenizer.from_pretrained("gpt2", truncation_side="left")
