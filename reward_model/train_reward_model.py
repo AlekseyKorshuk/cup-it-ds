@@ -329,7 +329,7 @@ if __name__ == "__main__":
         fp16=True,
         bf16=False,
         learning_rate=1e-5,
-        deepspeed="ds_config_gpt_j.json",
+        deepspeed="./deepspeed_config/ds_config_gpt_j.json",
         weight_decay=0.01,
         report_to="wandb"
     )

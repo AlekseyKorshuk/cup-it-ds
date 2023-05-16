@@ -148,7 +148,7 @@ training_args = TrainingArguments(
     logging_steps=100,
     load_best_model_at_end=True,
     push_to_hub=True,
-    deepspeed="ds_config_small.json",
+    deepspeed="./deepspeed_config/ds_config_small.json",
     fp16=True
 )
 

@@ -55,7 +55,7 @@ for row in tqdm(ds):
     for comment, position in zip(row["comments"], positions):
         comment["score"] = position
 
-with open('no-context-output.jsonl', 'w') as outfile:
+with open('../no-context-output.jsonl', 'w') as outfile:
     for entry in ds:
         json.dump(entry, outfile)
         outfile.write('\n')

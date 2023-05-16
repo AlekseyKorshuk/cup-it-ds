@@ -1,12 +1,8 @@
 import tqdm
-from transformers import pipeline
-import torch
-from datasets import load_dataset, Dataset
-from reward_model import GPTRewardModel
+from reward_model.reward_model import GPTRewardModel
 import torch
 from transformers import AutoTokenizer
 from datasets import load_dataset
-import json
 
 tokenizer = AutoTokenizer.from_pretrained("gpt2", truncation_side="left")
 tokenizer.pad_token = tokenizer.eos_token
